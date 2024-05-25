@@ -1,0 +1,25 @@
+* To add a new user inside the backend go to the config folder inside the functions folder, open userData.json file and inside the array of objects add a coma then add a new object with the following template  
+
+{ 
+
+   "username": "<username here>", 
+
+   "password": "<password here>" 
+
+}, 
+
+* To change the backup database/restore database you must follow these steps. 
+
+1)  navigate to https://console.cloud.google.com/ 
+
+2) From the top left you can select your project 
+
+3) navigate to IAM & Admin then navigate to service accounts from the sidemenu 
+
+4) now click on create service account on the top enter account name click continue the select a role go to basic and provide the owner role click continue the click done. 
+
+5) now from the service account list click the service account you just created go to the key tab at the top click on a dropdown named "ADD KEY" then click on create new key select key type as JSON click on create and it will download the key to your drive. 
+
+6) Now if you want to create backup of this project rename this key as “backup_database” or if you want to restore the backup to this project then rename it as “restore_database” and put it inside the config folder which is inside the functions folder in the backend.
+
+ 
