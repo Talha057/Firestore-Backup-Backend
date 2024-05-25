@@ -11,8 +11,6 @@ firebase-debug.*.log*
 .firebase/
 
 # Firebase config
-functions/config/backup_database.json
-functions/config/restore_database.json
 
 # Uncomment this if you'd like others to create their own Firebase project.
 # For a team working on the same Firebase project(s), it is recommended to leave
@@ -65,4 +63,6 @@ node_modules/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+functions/.env
+backup_database.json
+restore_database.json

@@ -4,9 +4,24 @@ const firestore = require("firebase-admin/firestore");
 const { Storage } = require("@google-cloud/storage");
 // Destination bucket
 const bucket = "gs://firestoree";
+console.log();
+
+const credential = {
+  type: "service_account",
+  project_id: "vapta-v2",
+  private_key_id: process.env.BACKUP_PRIVATE_KEY_ID,
+  private_key: process.env.BACKUP_PRIVATE_KEY,
+  client_email: process.env.BACKUP_CLIENT_EMAIL,
+  client_id: process.env.BACKUP_CLIENT_ID,
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url: process.env.BACKUP_CLIENT_X509_CERT_URL,
+  universe_domain: "googleapis.com",
+};
 
 const config = {
-  credentials: require("../../config/backup_database.json"),
+  credentials: credential,
 };
 const client = new firestore.v1.FirestoreAdminClient(config);
 const databaseName = client.databasePath("vapta-v2", "(default)");
@@ -49,7 +64,7 @@ const getFiles = async (req, res) => {
     } else {
       const storage = new Storage({
         projectId: "vapta-v2",
-        credentials: require("../../config/backup_database.json"),
+        credentials: credential,
       });
       const [files] = await storage.bucket(bucketName).getFiles();
 
