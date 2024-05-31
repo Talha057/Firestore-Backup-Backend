@@ -68,7 +68,7 @@ const getFiles = async (req, res) => {
           credentials: credential,
         });
         const [files] = await storage.bucket(bucketName).getFiles();
-
+        console.log("files ");
         const folderNames = new Set();
 
         files.forEach((file) => {
@@ -77,6 +77,7 @@ const getFiles = async (req, res) => {
             folderNames.add(parts[0]); // Assuming the first part is the folder name
           }
         });
+        console.log("files 2");
 
         const fileNames = Array.from(folderNames);
 
@@ -105,6 +106,7 @@ const getFiles = async (req, res) => {
             res.status(500).json({ error: "Failed to generate download URL" });
           }
         }
+        console.log("files 3");
         res.send({
           files: fileArray,
         });
