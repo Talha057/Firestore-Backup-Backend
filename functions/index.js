@@ -25,6 +25,6 @@ app.use(mainRouter);
 //   console.log("Cron Job running at 11:55 PM Daily");
 //   backupCon.exportBackup()
 // });
-app.listen("8010", () => {
+app.listen(process.env.PORT, () => {
   console.log("Server is running");
 });
