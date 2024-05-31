@@ -36,8 +36,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 For support or inquiries, please contact [Talha](https://github.com/Talha057).
 
-## Acknowledgments
 
-Special thanks to the contributors and the open-source community for their invaluable contributions and feedback.
 
 
