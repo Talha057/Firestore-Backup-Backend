@@ -111,7 +111,7 @@ const getFiles = async (req, res) => {
           files: fileArray,
         });
       } catch (err) {
-        console.log(err);
+        console.log("errorrrrrrrrrrrrrr", err);
       }
     }
   });
