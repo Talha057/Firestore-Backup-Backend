@@ -62,51 +62,55 @@ const getFiles = async (req, res) => {
       console.log(err);
       return res.status(401).json({ error: "Invalid token" });
     } else {
-      const storage = new Storage({
-        projectId: "vapta-v2",
-        credentials: credential,
-      });
-      const [files] = await storage.bucket(bucketName).getFiles();
+      try {
+        const storage = new Storage({
+          projectId: "vapta-v2",
+          credentials: credential,
+        });
+        const [files] = await storage.bucket(bucketName).getFiles();
 
-      const folderNames = new Set();
+        const folderNames = new Set();
 
-      files.forEach((file) => {
-        const parts = file.name.split("/");
-        if (parts.length > 1) {
-          folderNames.add(parts[0]); // Assuming the first part is the folder name
+        files.forEach((file) => {
+          const parts = file.name.split("/");
+          if (parts.length > 1) {
+            folderNames.add(parts[0]); // Assuming the first part is the folder name
+          }
+        });
+
+        const fileNames = Array.from(folderNames);
+
+        const fileArray = [];
+
+        for (let file of fileNames) {
+          const obj = {};
+          try {
+            let [url] = await storage
+              .bucket(bucketName)
+              .file(file)
+              .getSignedUrl({
+                action: "read",
+                expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // URL expires in 15 minutes
+              });
+            const ind = url.indexOf("?");
+            url = url.slice(0, ind);
+            obj.fileUrl = url;
+            obj.fileUrlPart = file;
+            const index = file.indexOf("_");
+            let elem = file.slice(0, index);
+            elem = elem.slice(0, 19).replace("T", "_");
+            obj.fileName = elem;
+            fileArray.push(obj);
+          } catch (error) {
+            res.status(500).json({ error: "Failed to generate download URL" });
+          }
         }
-      });
-
-      const fileNames = Array.from(folderNames);
-
-      const fileArray = [];
-
-      for (let file of fileNames) {
-        const obj = {};
-        try {
-          let [url] = await storage
-            .bucket(bucketName)
-            .file(file)
-            .getSignedUrl({
-              action: "read",
-              expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // URL expires in 15 minutes
-            });
-          const ind = url.indexOf("?");
-          url = url.slice(0, ind);
-          obj.fileUrl = url;
-          obj.fileUrlPart = file;
-          const index = file.indexOf("_");
-          let elem = file.slice(0, index);
-          elem = elem.slice(0, 19).replace("T", "_");
-          obj.fileName = elem;
-          fileArray.push(obj);
-        } catch (error) {
-          res.status(500).json({ error: "Failed to generate download URL" });
-        }
+        res.send({
+          files: fileArray,
+        });
+      } catch (err) {
+        console.log(err);
       }
-      res.send({
-        files: fileArray,
-      });
     }
   });
 };
